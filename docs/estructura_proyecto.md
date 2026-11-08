@@ -1,23 +1,4 @@
-# **Estructura de Repositorio para Entregas**
-
-A medida que avancemos en el curso, la organización será tan importante como el código que escriban. Para garantizar que todos los proyectos sean fáciles de revisar, entender y replicar, usaremos una estructura de repositorio estandarizada para cada entrega.
-
-## La Regla de Oro: Claridad y Reproducibilidad
-
-Cada una de sus entregas estará contenida en su propia carpeta principal (entrega 1, entrega 2, etc.), pero dentro de ellas, siempre deben incluir la siguiente organización.
-
-Al seguir esta estructura sugerida, nos aseguramos de que cualquier persona (incluyéndote a ti mismo en el futuro) pueda:
-
-- Entender el Proyecto rápidamente leyendo el README.md.
-
-- Ejecutar el Código sin problemas gracias a requirements.txt.
-
-- Localizar el código fuente principal dentro de la carpeta src/.
-
-## Estructura Detallada por Entrega
-
-**IMPORTANTE**: a continuación se presenta una sugerencia detallada, no es necesario que su estructura tenga exactamente los detalles que se presentan a continuación. El objetivo es mostrar la estructura que típicamente encontraran en un proyecto.
-Para cada entrega, tu carpeta debe replicar la siguiente jerarquía (hasta donde les sea posible), adaptando los archivos internos según sea necesario (esta es la estructura, pero simplificada para el contexto de una entrega y de acuerdo a sus necesidades):
+# **Estructura de Repositorio**
 
 ```text
 📦 apo3-mangoMelocoton/
