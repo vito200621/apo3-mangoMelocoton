@@ -1,83 +1,74 @@
-____________________________________________________________________________________
+# Fruit and Vegetable Quality and Size Sorter
 
+This project is part of the **Proyecto Final de Algoritmos y Programación III** course at Universidad Icesi, Cali, Colombia. It applies computer vision and machine learning to classify the quality and estimate the size of individual fruits and vegetables.
 
-# Project Template
-This is the template for the Project I course at the IA Master, Universidad Icesi, Cali Colombia
-
-This template is based on the template proposed by the [Data Science Working Group] (https://github.com/sfbrigade/data-science-wg) Code for the [San Francisco’s Code initiative](https://github.com/sfbrigade/data-science-wg) 
-
-*Instructions: Edit this template filling in the titles, information, and links! Feel free to stray a bit to suit your project but try to provide the main information for reviews and feedback purposes.*
-## Remove this table after updating your project's information
-____________________________________________________________________________________
-
-# Project Name
-This project is a part of the  **Proyecto 1 de Innovación Tecnológica** course in the Applied Artificial Intelligence Master, Universidad Icesi, Cali Colombia. 
-
-#### -- Project Status: [Active, On-Hold, Completed]
+**Project Status:** Active
 
 ## Contributing Members
 
-**Team Leader: [Full Name](https://github.com/[github handle])(@slackHandle)**
-**Instructor: [Full Name](https://github.com/[github handle])(@slackHandle)**
+| Name | Github |
+| --------- | ----------------- |
+| [Alejandro Vargas Sanchez](https://github.com/alevargasschz) | @alevargasschz |
+| [Juan Jose Muñoz Franco](https://github.com/JJJuuuaaannnMMMuuunnnooozzz) | @JJJuuuaaannnMMMuuunnnooozzz |
+| [Victoria Restrepo B](https://github.com/vito200621) | @vito200621 |
 
-#### Other Members:
+## Objective
 
-|Name     |  Email   | 
-|---------|-----------------|
-|[Full Name](https://github.com/[github handle])| @johnDoe        |
-|[Full Name](https://github.com/[github handle]) |     @janeDoe    |
+Given a photograph of one fruit or vegetable on a simple, uniform background, the system will:
 
-## Contact
-* Feel free to contact the team leader or the instructor with any questions or if you are interested in contributing!
+- Classify its quality into at least three categories defined by the team.
+- Estimate its size as small, medium, or large, or calculate a normalized diameter.
 
-
-## Project Intro/Objective
-The purpose of this project is ________. (Describe the main goals of the project and potential civic impact. Limit to a short paragraph, 3-6 Sentences)
-
-### Partner
-This section should be added when there's a partner institution 
-* [Name of Partner organization/Government department etc..]
-* Website for partner
-* Partner contact: [Name of Contact], [slack handle of contact if any]
-* If you do not have a partner leave this section out
+The project follows the **CRISP-DM** methodology and will compare at least two traditional machine learning models with a small convolutional neural network. The final predictions will be presented through a **Streamlit** interface that supports image uploads and, when available, camera capture.
 
 ### Methods Used
-* Inferential Statistics
-* Machine Learning
-* Data Visualization
-* Predictive Modeling
-* etc.
+
+- Exploratory data analysis
+- Image preprocessing and segmentation
+- Inferential statistics
+- Machine learning with hyperparameter tuning
+- Convolutional neural networks
+- Model evaluation and error analysis
+- Data visualization
+- Predictive modeling
 
 ### Technologies
-* R 
-* Python
-* D3
-* PostGres, MySql
-* Pandas, jupyter
-* HTML
-* JavaScript
-* etc. 
+
+- Python 3.11
+- Pandas and NumPy
+- OpenCV
+- Scikit-learn
+- TensorFlow
+- Matplotlib and Seaborn
+- Streamlit
+- JupyterLab
 
 ## Project Description
-(Provide a more detailed overview of the project.  Talk a bit about your data sources and what questions and hypotheses you are exploring. What specific data analysis/visualization and modeling work are you using to solve the problem? What blockers and challenges are you facing?  Feel free to number or bullet point things here)
+
+The project addresses the slow, subjective, and error-prone manual classification of fresh products in markets and agroindustries. The main reference source is the [Fruit Quality Classification dataset on Kaggle](https://www.kaggle.com/datasets/ryandpark/fruit-quality-classification), including the `mixed quality` images when individual fruits need to be segmented. The team will complement this source with 30 to 50 photographs of real fruits or vegetables collected in markets, supermarkets, or homes, covering different maturity levels, sizes, and visible defects.
+
+The additional images will be manually annotated with quality and size labels. The analysis will examine class distributions, image quality, variability, and possible imbalance. The modeling work will compare traditional machine learning approaches and a small CNN, using predefined metrics, cross-validation or grid search for hyperparameters, a baseline, and an error analysis on the test set. The project requirements and evaluation criteria are documented in [docs/project/0_Proyecto_Final_26-2.md](docs/project/0_Proyecto_Final_26-2.md).
 
 ## Getting Started
+
 Instructions for contributors
-1. Clone this repo (for help see this [tutorial](https://help.github.com/articles/cloning-a-repository/)).
-2. Raw Data is being kept [here](Repo folder containing raw data) within this repo.
 
-    *If using offline data mention that and how contributors may obtain the data )*
-    
-3. Data processing/transformation scripts are being kept [here](Repo folder containing data processing scripts/notebooks)
-4. etc...
+1. Clone this repository (for help, see the [GitHub cloning tutorial](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository)).
+2. Create and activate the Conda environment:
 
-*If your project is well underway and setup is fairly complicated (ie. requires installation of many packages) create another "setup.md" file and link to it here*  
+   ```bash
+   conda env create -f environment.yml
+   conda activate fruit-sorter
+   ```
 
-5. Follow setup [instructions](Link to file)
+   Alternatively, install the dependencies listed in [requirements.txt](requirements.txt) in a Python 3.11 environment.
+
+3. Download the [Fruit Quality Classification dataset](https://www.kaggle.com/datasets/ryandpark/fruit-quality-classification) and keep the raw data outside version control, or follow the team's shared-data instructions.
+4. Use [notebooks/](notebooks/) for experimentation, [src/](src/) for preprocessing, training, evaluation, and application code, [experiments/](experiments/) for generated results, and [tests/](tests/) for tests.
+5. Consult [docs/estructura_proyecto.md](docs/estructura_proyecto.md) for the repository organization and reproducibility guidelines.
 
 ## Featured Notebooks/Analysis/Deliverables
-* [Notebook/Markdown/Slide Deck Title](link)
-* [Notebook/Markdown/Slide DeckTitle](link)
-* [Blog Post](link)
 
-
+- [Experiment notebook](notebooks/experiment_1.ipynb)
+- [Final project requirements and evaluation criteria](docs/project/0_Proyecto_Final_26-2.md)
+- [Repository structure guidelines](docs/estructura_proyecto.md)
