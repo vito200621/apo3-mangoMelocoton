@@ -20,45 +20,115 @@ Al seguir esta estructura sugerida, nos aseguramos de que cualquier persona (inc
 Para cada entrega, tu carpeta debe replicar la siguiente jerarquía (hasta donde les sea posible), adaptando los archivos internos según sea necesario (esta es la estructura, pero simplificada para el contexto de una entrega y de acuerdo a sus necesidades):
 
 ```text
-📦 nombre-del-proyecto/
+📦 apo3-mangoMelocoton/
 │
-├── 📂 data/   
-│   └── 📂 raw/             # Datos sin procesar
-│   └── 📂 processed/         # Datos procesados
-│   
-├── 📂 docs/                     # Documentación del proyecto
-│   ├── 📜 README.md             # Documentación extendida
-│   ├── 📜 arquitectura.md       # Detalles del modelo y diseño
-│   ├── 📜 api.md               # Documentación de la API (si aplica)
-│   └── 📜 instalacion.md       # Guía de instalación y dependencias
+├── 📂 data/                              # Datos del proyecto
+│   ├── 📂 raw/                           # Datos originales sin procesar
+│   │   ├── 📂 collected/                 # Imágenes recolectadas por el equipo
+│   │   └── 📂 fruit_quality_classification/ # Dataset público de Kaggle
+│   │
+│   ├── 📂 processed/                     # Datos procesados
+│   │   ├── 📂 images/                    # Imágenes preprocesadas
+│   │   ├── 📂 features/                  # Características extraídas
+│   │   └── 📜 annotations.csv            # Etiquetas y anotaciones
+│   │
+│   └── 📂 splits/                        # Particiones del conjunto de datos
+│       ├── 📜 train.csv                  # Datos de entrenamiento
+│       ├── 📜 validation.csv             # Datos de validación
+│       └── 📜 test.csv                   # Datos de prueba
 │
-├── 📂 src/                      # Código fuente principal
-│   ├── 📂 data/                 # Scripts para cargar/preprocesar datos
-│   │   └── preprocess.py
-│   ├── 📂 models/               # Definición de arquitecturas de modelos
-│   │   └── my_model.py
-│   ├── 📂 training/             # Scripts de entrenamiento
-│   │   └── train.py
-│   ├── 📂 evaluation/           # Scripts de validación y pruebas
-│   │   └── evaluate.py
-│   ├── 📂 utils/                # Funciones auxiliares
-│   │   └── helpers.py
-│   └── main.py                  # Punto de entrada principal
+├── 📂 docs/                              # Documentación del proyecto
+│   ├── 📂 project/                       # Documentos del proyecto académico
+│   │   ├── 📜 0_Proyecto_Final_26-2.md
+│   │   ├── 📜 0_Proyecto Final 26-2.pdf
+│   │   ├── 📜 Rubrica.md
+│   │   └── 📜 Rúbrica.pdf
+│   │
+│   ├── 📜 README.md                      # Documentación extendida
+│   ├── 📜 arquitectura.md                # Arquitectura del sistema
+│   ├── 📜 estructura_proyecto.md         # Organización del repositorio
+│   ├── 📜 metodologia.md                 # Metodología CRISP-DM
+│   ├── 📜 analisis_etico.md              # Análisis ético del proyecto
+│   └── 📜 instalacion.md                 # Instalación y configuración
 │
-├── 📂 notebooks/                # Jupyter Notebooks para experimentación
-│   └── experiment_1.ipynb
+├── 📂 src/                               # Código fuente principal
+│   ├── 📂 app/                           # Interfaz y despliegue
+│   │   ├── 📜 interface.py               # Interfaz gráfica con Streamlit
+│   │   ├── 📜 predictor.py               # Lógica de predicción
+│   │   └── 📜 __init__.py
+│   │
+│   ├── 📂 data/                          # Procesamiento y preparación de datos
+│   │   ├── 📜 load_data.py               # Carga de datos
+│   │   ├── 📜 preprocess.py              # Preprocesamiento de imágenes
+│   │   ├── 📜 segmentation.py            # Segmentación de frutas y verduras
+│   │   ├── 📜 feature_extraction.py      # Extracción de características
+│   │   ├── 📜 dataset.py                 # Preparación de conjuntos de datos
+│   │   └── 📜 __init__.py
+│   │
+│   ├── 📂 models/                        # Definición de modelos
+│   │   ├── 📜 svm.py                     # Modelo SVM
+│   │   ├── 📜 xgboost_model.py           # Modelo XGBoost
+│   │   ├── 📜 cnn.py                     # Red neuronal convolucional
+│   │   └── 📜 __init__.py
+│   │
+│   ├── 📂 training/                      # Entrenamiento de modelos
+│   │   ├── 📜 train_svm.py
+│   │   ├── 📜 train_xgboost.py
+│   │   ├── 📜 train_cnn.py
+│   │   └── 📜 __init__.py
+│   │
+│   ├── 📂 evaluation/                    # Evaluación y comparación
+│   │   ├── 📜 evaluate_svm.py
+│   │   ├── 📜 evaluate_xgboost.py
+│   │   ├── 📜 evaluate_cnn.py
+│   │   ├── 📜 metrics.py                 # Métricas compartidas
+│   │   ├── 📜 compare_models.py          # Comparación de modelos
+│   │   └── 📜 __init__.py
+│   │
+│   ├── 📂 utils/                         # Funciones auxiliares
+│   │   ├── 📜 config.py                  # Configuración general
+│   │   ├── 📜 helpers.py                 # Funciones reutilizables
+│   │   ├── 📜 logger.py                  # Registro de eventos
+│   │   └── 📜 __init__.py
+│   │
+│   └── 📜 __init__.py
 │
-├── 📂 experiments/              # Resultados de experimentos
-│   ├── 📂 logs/                 # Logs de entrenamiento
-│   ├── 📂 checkpoints/          # Modelos guardados
-│   └── 📂 results/              # Métricas, gráficas, outputs
+├── 📂 notebooks/                         # Experimentación y análisis
+│   ├── 📜 01_data_exploration.ipynb      # Exploración de datos
+│   ├── 📜 02_preprocessing.ipynb         # Análisis del preprocesamiento
+│   ├── 📜 03_feature_extraction.ipynb    # Extracción de características
+│   └── 📜 04_model_comparison.ipynb      # Comparación de modelos
 │
-├── 📂 tests/                    # Pruebas unitarias y de integración
-│   └── test_models.py
+├── 📂 experiments/                       # Seguimiento de experimentos
+│   ├── 📂 logs/                          # Registros de entrenamiento
+│   │   ├── 📂 svm/
+│   │   ├── 📂 xgboost/
+│   │   └── 📂 cnn/
+│   │
+│   ├── 📂 checkpoints/                   # Modelos entrenados
+│   │   ├── 📂 svm/
+│   │   ├── 📂 xgboost/
+│   │   └── 📂 cnn/
+│   │
+│   └── 📂 results/                       # Resultados experimentales
+│       ├── 📂 svm/
+│       ├── 📂 xgboost/
+│       ├── 📂 cnn/
+│       ├── 📂 comparison/                # Comparación de modelos
+│       └── 📂 figures/                   # Gráficas y visualizaciones
 │
-├── 📜 requirements.txt          # Dependencias del proyecto (Python)
-├── 📜 environment.yml           # Alternativa (conda env)
-├── 📜 .gitignore                # Archivos a ignorar en git
-├── 📜 LICENSE                   # Licencia del proyecto
-└── 📜 README.md                 # Descripción principal del proyecto
+├── 📂 tests/                             # Pruebas unitarias e integración
+│   ├── 📜 test_preprocessing.py
+│   ├── 📜 test_segmentation.py
+│   ├── 📜 test_svm.py
+│   ├── 📜 test_xgboost.py
+│   ├── 📜 test_cnn.py
+│   ├── 📜 test_predictor.py
+│   └── 📜 __init__.py
+│
+├── 📜 requirements.txt                   # Dependencias de Python
+├── 📜 environment.yml                    # Configuración del entorno Conda
+├── 📜 .gitignore                         # Archivos excluidos de Git
+├── 📜 LICENSE                            # Licencia del proyecto
+└── 📜 README.md                          # Presentación principal del proyecto
 ```
