@@ -55,6 +55,7 @@ cover/
 # Entornos virtuales
 .env
 .env.*
+!.env.example
 .venv/
 venv/
 ENV/
@@ -154,20 +155,42 @@ pyrightconfig.json
 # Datos del proyecto
 # ==========================================
 
-# Datos originales
-data/raw/*
-!data/raw/.gitkeep
+# Datos originales: no versionar datasets completos
+data/raw/**
+!data/raw/**/
+!data/raw/**/.gitkeep
 
-# Datos procesados
-data/processed/*
-!data/processed/.gitkeep
+# Imágenes procesadas y características generadas
+data/processed/images/*
+!data/processed/images/.gitkeep
+
+data/processed/features/*
+!data/processed/features/.gitkeep
+
+# Mantener las anotaciones y particiones CSV
+# data/processed/annotations.csv
+# data/splits/train.csv
+# data/splits/validation.csv
+# data/splits/test.csv
 
 # ==========================================
 # Modelos y experimentos
 # ==========================================
 
-experiments/checkpoints/*
-!experiments/checkpoints/.gitkeep
+# Checkpoints y modelos entrenados
+experiments/checkpoints/**
+!experiments/checkpoints/**/
+!experiments/checkpoints/**/.gitkeep
+
+# Logs generados
+experiments/logs/**
+!experiments/logs/**/
+!experiments/logs/**/.gitkeep
+
+# Resultados generados
+experiments/results/**
+!experiments/results/**/
+!experiments/results/**/.gitkeep
 
 # ==========================================
 # Sistema operativo
@@ -175,10 +198,10 @@ experiments/checkpoints/*
 
 .DS_Store
 Thumbs.db
+desktop.ini
 
 # ==========================================
 # Credenciales y archivos sensibles
 # ==========================================
 
-.env
 kaggle.json
