@@ -67,6 +67,22 @@ Instructions for contributors
 4. Use [notebooks/](notebooks/) for experimentation, [src/](src/) for preprocessing, training, evaluation, and application code, [experiments/](experiments/) for generated results, and [tests/](tests/) for tests.
 5. Consult [docs/estructura_proyecto.md](docs/estructura_proyecto.md) for the repository organization and reproducibility guidelines.
 
+## Running the application
+
+From the repository root, launch the Streamlit interface with:
+
+```bash
+streamlit run src/app/interface.py
+```
+
+The command-line pipeline is available as a module:
+
+```bash
+python -m src.main --help
+```
+
+Use `--reset-processed` with `eda`, `train`, or `all` only when you want to replace the existing processed dataset.
+
 ## Featured Notebooks/Analysis/Deliverables
 
 - [Experiment notebook](notebooks/experiment_1.ipynb)
