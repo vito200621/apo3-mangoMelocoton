@@ -15,6 +15,27 @@ def load_image(path: str | Path) -> np.ndarray | None:
 def load_ml_arrays(
     processed_dir: str | Path = Path("data/processed"),
 ) -> dict[str, np.ndarray]:
+    return _load_ml_arrays(
+        processed_dir,
+        ("Xtrain", "ytrain", "Xval", "yval", "Xtest", "ytest"),
+    )
+
+
+def load_ml_train_val_arrays(
+    processed_dir: str | Path = Path("data/processed"),
+) -> dict[str, np.ndarray]:
+    return _load_ml_arrays(processed_dir, ("Xtrain", "ytrain", "Xval", "yval"))
+
+
+def load_ml_test_arrays(
+    processed_dir: str | Path = Path("data/processed"),
+) -> dict[str, np.ndarray]:
+    return _load_ml_arrays(processed_dir, ("Xtest", "ytest"))
+
+
+def _load_ml_arrays(
+    processed_dir: str | Path, keys: tuple[str, ...]
+) -> dict[str, np.ndarray]:
     processed_dir = Path(processed_dir)
     names = {
         "Xtrain": ("Xtrain_ml.npy", "Xtrainml.npy"),
@@ -26,7 +47,8 @@ def load_ml_arrays(
     }
     arrays = {}
 
-    for key, (canonical, legacy) in names.items():
+    for key in keys:
+        canonical, legacy = names[key]
         path = processed_dir / canonical
         if not path.exists():
             path = processed_dir / legacy

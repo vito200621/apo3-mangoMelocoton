@@ -4,7 +4,7 @@ from pathlib import Path
 
 import joblib
 
-from src.data.load_data import load_ml_arrays
+from src.data.load_data import load_ml_test_arrays
 from src.evaluation.metrics import full_report
 from src.utils.config import load_label_info
 
@@ -30,7 +30,7 @@ def evaluate_random_forest(
         raise FileNotFoundError(f"Random Forest model not found in {models_dir}.")
 
     label_info = load_label_info(processed_dir)
-    arrays = load_ml_arrays(processed_dir)
+    arrays = load_ml_test_arrays(processed_dir)
     model = joblib.load(model_path)
     predictions = model.predict(arrays["Xtest"])
     probabilities = model.predict_proba(arrays["Xtest"])

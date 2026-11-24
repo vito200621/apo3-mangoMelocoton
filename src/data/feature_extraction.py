@@ -2,6 +2,7 @@ from pathlib import Path
 
 import cv2
 import numpy as np
+import pandas as pd
 from tqdm import tqdm
 
 from src.data.dataset import IMAGE_EXTENSIONS
@@ -132,3 +133,61 @@ def load_split_features(
         )
 
     return np.vstack(X).astype(np.float32), np.array(y, dtype=np.int32)
+
+
+def load_split_groups(
+    processed_dir: str | Path,
+    split_name: str,
+    label_info: dict,
+    expected_labels: np.ndarray | None = None,
+) -> np.ndarray:
+    processed_dir = Path(processed_dir)
+    split_dir_name = "val" if split_name == "validation" else split_name
+    split_csv_name = f"{split_dir_name}.csv"
+    manifest_path = processed_dir / split_csv_name
+    if not manifest_path.is_file():
+        raise FileNotFoundError(f"Missing split manifest: {manifest_path}")
+
+    manifest = pd.read_csv(manifest_path)
+    required = {"processed_path", "group_id"}
+    if not required.issubset(manifest.columns):
+        raise ValueError(f"{manifest_path} must contain {sorted(required)}.")
+    if manifest["processed_path"].duplicated().any():
+        raise ValueError(f"{manifest_path} contains duplicate processed_path values.")
+    if manifest["processed_path"].isna().any():
+        raise ValueError(f"{manifest_path} contains missing processed_path values.")
+    if (
+        manifest["group_id"].isna().any()
+        or manifest["group_id"].astype(str).str.strip().eq("").any()
+    ):
+        raise ValueError(f"{manifest_path} contains missing group_id values.")
+
+    group_by_path = {
+        str(Path(row.processed_path).resolve()): str(row.group_id)
+        for row in manifest.itertuples(index=False)
+    }
+    groups: list[str] = []
+    labels: list[int] = []
+    for quality in label_info["class_names"]:
+        folder = processed_dir / split_dir_name / quality
+        image_paths = []
+        for extension in IMAGE_EXTENSIONS:
+            image_paths.extend(folder.glob(f"*{extension}"))
+            image_paths.extend(folder.glob(f"*{extension.upper()}"))
+
+        for image_path in sorted(set(image_paths)):
+            path_key = str(image_path.resolve())
+            if path_key not in group_by_path:
+                raise ValueError(
+                    f"{image_path} is missing from {manifest_path}."
+                )
+            groups.append(group_by_path[path_key])
+            labels.append(label_info["label_map"][quality])
+
+    if expected_labels is not None and not np.array_equal(
+        np.asarray(labels, dtype=np.int32), np.asarray(expected_labels, dtype=np.int32)
+    ):
+        raise ValueError(
+            f"Feature labels do not align with {split_name}.csv image order."
+        )
+    return np.asarray(groups, dtype=str)
