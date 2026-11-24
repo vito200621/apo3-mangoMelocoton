@@ -167,6 +167,19 @@ data/processed/images/*
 data/processed/features/*
 !data/processed/features/.gitkeep
 
+# Salidas generadas por el cuaderno 02 (no versionar datos derivados)
+data/processed/train/
+data/processed/val/
+data/processed/test/
+data/processed/final_manifest.csv
+data/processed/train.csv
+data/processed/val.csv
+data/processed/test.csv
+data/processed/labelinfo.json
+data/processed/classweights.json
+data/processed/X*ml.npy
+data/processed/y*ml.npy
+
 # Mantener las anotaciones y particiones CSV
 # data/processed/annotations.csv
 # data/splits/train.csv
