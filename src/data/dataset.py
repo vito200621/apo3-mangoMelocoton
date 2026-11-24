@@ -75,9 +75,14 @@ def empty_manifest() -> pd.DataFrame:
             "source",
             "source_image_id",
             "fruit",
+            "capture_device",
+            "lighting",
+            "background",
             "quality",
+            "maturity",
             "size_label",
             "diameter_norm",
+            "diameter_mm",
             "defect",
             "group_id",
             "notes",
@@ -233,9 +238,14 @@ def apply_own_annotations(own_df: pd.DataFrame, annotation_path: Path) -> pd.Dat
 
     annotation_cols = [
         "sample_id",
+        "capture_device",
+        "lighting",
+        "background",
         "quality",
         "size_label",
         "diameter_norm",
+        "diameter_mm",
+        "maturity",
         "defect",
         "group_id",
         "notes",
@@ -253,9 +263,14 @@ def apply_own_annotations(own_df: pd.DataFrame, annotation_path: Path) -> pd.Dat
     )
 
     for col in [
+        "capture_device",
+        "lighting",
+        "background",
         "quality",
+        "maturity",
         "size_label",
         "diameter_norm",
+        "diameter_mm",
         "defect",
         "group_id",
         "notes",
@@ -267,3 +282,90 @@ def apply_own_annotations(own_df: pd.DataFrame, annotation_path: Path) -> pd.Dat
 
     merged = merged[merged["quality"].isin(FINAL_QUALITY_CLASSES)].copy()
     return merged
+
+
+def apply_mixed_annotations(
+    candidates_df: pd.DataFrame, annotation_path: Path
+) -> pd.DataFrame:
+    if candidates_df.empty:
+        return empty_manifest()
+
+    annotation_path.parent.mkdir(parents=True, exist_ok=True)
+    columns = empty_manifest().columns.tolist()
+    template = candidates_df.copy()
+
+    for column in columns:
+        if column not in template.columns:
+            template[column] = ""
+
+    template = template[columns]
+
+    if not annotation_path.exists():
+        template.to_csv(annotation_path, index=False)
+        print(f"Mixed-candidate annotation template created: {annotation_path}")
+        return empty_manifest()
+
+    annotations = pd.read_csv(annotation_path)
+    if "sample_id" not in annotations.columns:
+        raise ValueError(f"{annotation_path} must contain a sample_id column.")
+    if annotations["sample_id"].astype(str).duplicated().any():
+        raise ValueError(f"{annotation_path} contains duplicate sample_id values.")
+
+    for column in columns:
+        if column not in annotations.columns:
+            annotations[column] = ""
+
+    annotations = annotations[columns].copy()
+    existing_ids = set(annotations["sample_id"].astype(str))
+    new_rows = template[~template["sample_id"].astype(str).isin(existing_ids)]
+    if not new_rows.empty:
+        annotations = pd.concat([annotations, new_rows], ignore_index=True)
+        annotations.to_csv(annotation_path, index=False)
+        print(f"Mixed annotation file updated with {len(new_rows)} new rows.")
+
+    annotation_columns = [
+        "sample_id",
+        "fruit",
+        "capture_device",
+        "lighting",
+        "background",
+        "quality",
+        "maturity",
+        "size_label",
+        "diameter_norm",
+        "diameter_mm",
+        "defect",
+        "notes",
+    ]
+    annotations = annotations[annotation_columns].copy()
+    for column in annotation_columns[1:]:
+        annotations[column] = annotations[column].replace(
+            r"^\s*$", np.nan, regex=True
+        )
+
+    merged = candidates_df.merge(
+        annotations,
+        on="sample_id",
+        how="left",
+        suffixes=("", "_ann"),
+        validate="one_to_one",
+    )
+    for column in annotation_columns[1:]:
+        annotation_column = f"{column}_ann"
+        if annotation_column in merged.columns:
+            merged[column] = merged[annotation_column].combine_first(merged[column])
+            merged = merged.drop(columns=[annotation_column])
+
+    merged["quality"] = merged["quality"].astype("string").str.strip()
+    merged["quality"] = merged["quality"].mask(merged["quality"].eq(""), pd.NA)
+    invalid_quality = merged["quality"].notna() & ~merged["quality"].isin(
+        FINAL_QUALITY_CLASSES
+    )
+    if invalid_quality.any():
+        invalid_ids = merged.loc[invalid_quality, "sample_id"].astype(str).tolist()
+        raise ValueError(
+            "Mixed annotations contain unsupported quality labels for "
+            f"sample_id values: {invalid_ids[:10]}"
+        )
+
+    return merged[merged["quality"].isin(FINAL_QUALITY_CLASSES)].copy()
