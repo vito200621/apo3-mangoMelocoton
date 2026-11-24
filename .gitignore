@@ -159,6 +159,7 @@ pyrightconfig.json
 data/raw/**
 !data/raw/**/
 !data/raw/**/.gitkeep
+data/annotations/*.csv
 
 # Imágenes procesadas y características generadas
 data/processed/images/*
@@ -177,6 +178,7 @@ data/processed/val.csv
 data/processed/test.csv
 data/processed/labelinfo.json
 data/processed/classweights.json
+data/processed/split_summary.json
 data/processed/X*ml.npy
 data/processed/y*ml.npy
 
@@ -191,6 +193,7 @@ data/processed/y*ml.npy
 # ==========================================
 
 # Checkpoints y modelos entrenados
+models/
 experiments/checkpoints/**
 !experiments/checkpoints/**/
 !experiments/checkpoints/**/.gitkeep
