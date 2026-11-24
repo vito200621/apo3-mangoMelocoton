@@ -29,6 +29,48 @@ def ensure_dirs() -> None:
     PROCESSED_DIR.mkdir(parents=True, exist_ok=True)
 
 
+def _has_generated_processed_outputs() -> bool:
+    """Return whether processed data contains outputs beyond tracked placeholders."""
+    if not PROCESSED_DIR.exists():
+        return False
+
+    preserved_files = {"annotations.csv", ".gitkeep"}
+    placeholder_dirs = {"images", "features"}
+    for path in PROCESSED_DIR.iterdir():
+        if path.is_file() and path.name in preserved_files:
+            continue
+        if path.is_dir() and path.name in placeholder_dirs:
+            if any(child.name != ".gitkeep" for child in path.iterdir()):
+                return True
+            continue
+        return True
+
+    return False
+
+
+def _clear_generated_processed_outputs() -> None:
+    """Clear generated outputs while preserving tracked placeholders and annotations."""
+    if not PROCESSED_DIR.exists():
+        return
+
+    for path in list(PROCESSED_DIR.iterdir()):
+        if path.is_file() and path.name in {"annotations.csv", ".gitkeep"}:
+            continue
+        if path.is_dir() and path.name in {"images", "features"}:
+            for child in list(path.iterdir()):
+                if child.is_file() and child.name == ".gitkeep":
+                    continue
+                if child.is_dir():
+                    shutil.rmtree(child)
+                else:
+                    child.unlink()
+            continue
+        if path.is_dir():
+            shutil.rmtree(path)
+        else:
+            path.unlink()
+
+
 def run_eda_pipeline(reset_processed: bool = False) -> dict:
     ensure_dirs()
 
@@ -83,9 +125,9 @@ def run_eda_pipeline(reset_processed: bool = False) -> dict:
 
     df = add_size_estimations(df, path_col="path", overwrite=False)
 
-    if reset_processed and PROCESSED_DIR.exists():
-        shutil.rmtree(PROCESSED_DIR)
-    elif PROCESSED_DIR.exists() and any(PROCESSED_DIR.iterdir()):
+    if reset_processed:
+        _clear_generated_processed_outputs()
+    elif _has_generated_processed_outputs():
         raise FileExistsError(
             f"Processed data already exists at {PROCESSED_DIR}. "
             "Pass --reset-processed to replace it."
