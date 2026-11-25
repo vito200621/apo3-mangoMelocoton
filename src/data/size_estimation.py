@@ -77,17 +77,21 @@ def add_size_estimations(
         df["size_label"] = "unknown"
 
     for idx, row in tqdm(df.iterrows(), total=len(df), desc="Estimating size"):
-        has_manual_size = (
-            pd.notna(row.get("diameter_norm"))
-            and str(row.get("size_label", "unknown")) != "unknown"
-        )
+        has_manual_diameter = pd.notna(row.get("diameter_norm"))
+        has_manual_label = str(row.get("size_label", "unknown")).strip().lower() in {
+            "small",
+            "medium",
+            "large",
+        }
 
-        if has_manual_size and not overwrite:
+        if not overwrite and has_manual_diameter and has_manual_label:
             continue
 
         result = estimate_size_from_image(row[path_col])
 
-        df.at[idx, "diameter_norm"] = result["diameter_norm"]
-        df.at[idx, "size_label"] = result["size_label"]
+        if overwrite or not has_manual_diameter:
+            df.at[idx, "diameter_norm"] = result["diameter_norm"]
+        if overwrite or not has_manual_label:
+            df.at[idx, "size_label"] = result["size_label"]
 
     return df

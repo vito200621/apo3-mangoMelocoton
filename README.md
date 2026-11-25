@@ -63,9 +63,10 @@ Instructions for contributors
 
    Alternatively, install the dependencies listed in [requirements.txt](requirements.txt) in a Python 3.11 environment.
 
-3. Download the [Fruit Quality Classification dataset](https://www.kaggle.com/datasets/ryandpark/fruit-quality-classification) and keep the raw data outside version control, or follow the team's shared-data instructions.
-4. Use [notebooks/](notebooks/) for experimentation, [src/](src/) for preprocessing, training, evaluation, and application code, [experiments/](experiments/) for generated results, and [tests/](tests/) for tests.
-5. Consult [docs/estructura_proyecto.md](docs/estructura_proyecto.md) for the repository organization and reproducibility guidelines.
+3. Download the [Fruit Quality Classification dataset](https://www.kaggle.com/datasets/ryandpark/fruit-quality-classification) into `data/raw/kaggle` and keep raw data outside version control. The public source currently has Good/Bad and Mixed scenes, but no Regular examples. Add own images under `data/raw/own_collection/<Good|Regular|Bad>/<fruit>/`.
+4. Read and agree on the [annotation protocol](docs/protocolo_anotacion.md) before labeling. The pipeline creates a Mixed-crop annotation template; only reviewed Good/Regular/Bad rows are included in training. Results from two classes are reported as a binary pilot, not as a final three-class evaluation.
+5. Run notebooks [01](notebooks/01_data_exploration.ipynb), [02](notebooks/02_preprocessing.ipynb), [03](notebooks/03_feature_extraction.ipynb), and [04](notebooks/04_model_comparison.ipynb) in order. Notebooks 03 and 04 require actual data and trained artifacts; no project-trained results are committed.
+6. Use [src/](src/) for preprocessing, training, evaluation, and application code, [experiments/](experiments/) for generated results, and [tests/](tests/) for tests. Consult [docs/estructura_proyecto.md](docs/estructura_proyecto.md) for reproducibility guidance.
 
 ## Running the application
 
@@ -83,8 +84,12 @@ python -m src.main --help
 
 Use `--reset-processed` with `eda`, `train`, or `all` only when you want to replace the existing processed dataset.
 
-## Featured Notebooks/Analysis/Deliverables
+## Notebooks and deliverables
 
-- [Experiment notebook](notebooks/experiment_1.ipynb)
+- [Data exploration](notebooks/01_data_exploration.ipynb)
+- [Preprocessing and split validation](notebooks/02_preprocessing.ipynb)
+- [Feature extraction and training](notebooks/03_feature_extraction.ipynb)
+- [Test evaluation and error analysis](notebooks/04_model_comparison.ipynb)
+- [Annotation protocol draft](docs/protocolo_anotacion.md)
 - [Final project requirements and evaluation criteria](docs/project/0_Proyecto_Final_26-2.md)
 - [Repository structure guidelines](docs/estructura_proyecto.md)

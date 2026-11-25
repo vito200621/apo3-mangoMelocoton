@@ -12,7 +12,7 @@
 
 La clasificación de frutas y verduras por tamaño y defectos visibles suele realizarse mediante inspección manual. El proceso puede variar entre evaluadores y afectar la selección, el empaque y el desperdicio de alimentos. En este trabajo buscamos apoyar esa inspección con un prototipo que recibe la fotografía de un producto individual, estima su calidad visual y calcula un tamaño relativo. Usamos la predicción como apoyo para la revisión humana: no la interpretamos como certificación de inocuidad ni como medición de madurez interna [1].
 
-Nos propusimos resolver el problema mediante tres alternativas: Random Forest y SVM, que clasifican vectores de color, y una CNN, que aprende directamente de los píxeles. Organizamos el trabajo con CRISP-DM y ejecutamos los cuadernos 01 y 02 desde kernels limpios para explorar y preparar la descarga. Los cuadernos 03 y 04 permanecen vacíos en el estado remoto, así que todavía no tenemos métricas de modelos entrenados con las imágenes reales. Identificamos por separado el piloto sintético previo y los resultados observados en los datos descargados.
+Nos propusimos resolver el problema mediante tres alternativas: Random Forest y SVM, que clasifican vectores de color, y una CNN, que aprende directamente de los píxeles. Organizamos el trabajo con CRISP-DM y ejecutamos los cuadernos 01 y 02 desde kernels limpios para explorar y preparar la descarga. Los cuadernos 03 y 04 ya contienen el flujo de entrenamiento y evaluación, pero aún no se han ejecutado con datos finales ni existen métricas de modelos entrenados con imágenes reales en el checkout actual. Identificamos por separado el piloto sintético previo y los resultados observados en los datos descargados.
 
 ## II. Fundamentos y formulación del problema
 
@@ -77,7 +77,7 @@ La CNN contiene tres bloques convolucionales de 32, 64 y 128 filtros, cada uno c
 
 ### D. Salidas directas de los cuadernos
 
-En `01_data_exploration` mostramos conteos por clase y fruta, resolución, ejemplos, legibilidad y duplicados exactos: las 19.526 imágenes se leyeron y no hubo copias binarias repetidas. En `02_preprocessing` ejecutamos el pipeline y generamos `final_manifest.csv`, `train.csv`, `val.csv`, `test.csv`, `labelinfo.json`, `classweights.json` y las seis matrices `X*/y*` de 108 características en `data/processed`. Comprobamos sus formas, conteos por etiqueta y la ausencia de grupos compartidos entre particiones. El cuaderno también guardó 1.318 recortes Mixed en `data/processed/images/mixed_candidates/manifest.csv`, con la calidad vacía para revisión posterior. Los cuadernos 03 y 04 deben presentar la extracción revisada, búsqueda de hiperparámetros, métricas finales, matrices de confusión, errores por clase y artefactos de modelos.
+En `01_data_exploration` mostramos conteos por clase y fruta, resolución, ejemplos, legibilidad y duplicados exactos: las 19.526 imágenes se leyeron y no hubo copias binarias repetidas. En `02_preprocessing` ejecutamos el pipeline y generamos `final_manifest.csv`, `train.csv`, `val.csv`, `test.csv`, `labelinfo.json`, `classweights.json` y las seis matrices `X*/y*` de 108 características en `data/processed`. Comprobamos sus formas, conteos por etiqueta y la ausencia de grupos compartidos entre particiones. El cuaderno también guardó 1.318 recortes Mixed en `data/processed/images/mixed_candidates/manifest.csv`, con la calidad vacía para revisión posterior. Los cuadernos 03 y 04 ahora implementan el entrenamiento, la búsqueda de hiperparámetros, la comparación y el análisis de errores; aún falta ejecutarlos con las imágenes y anotaciones finales.
 
 ## IV. Configuración experimental
 
@@ -99,7 +99,7 @@ La preparación del cuaderno 02 tardó aproximadamente 45 minutos con todas las 
 | Mixed pendiente | 1.074 | — | — | — |
 | Total supervisado | 18.452 | 12.916 | 2.768 | 2.768 |
 
-En el piloto sintético previo, Random Forest y SVM alcanzaron exactitud y Macro-F1 de 1.00 en validación y prueba; la CNN de una época alcanzó 0.40 y 0.19 en validación, y 0.33 y 0.17 en prueba. Estas métricas no describen el conjunto público. Los cuadernos 03 y 04 siguen vacíos; por ello, aún no reportamos resultados de entrenamiento real, evaluación final ni pruebas de la interfaz con esta descarga.
+En el piloto sintético previo, Random Forest y SVM alcanzaron exactitud y Macro-F1 de 1.00 en validación y prueba; la CNN de una época alcanzó 0.40 y 0.19 en validación, y 0.33 y 0.17 en prueba. Estas métricas no describen el conjunto público. Aunque los cuadernos 03 y 04 ya están desarrollados, aún no se han ejecutado con datos finales; por ello, no reportamos resultados de entrenamiento real, evaluación final ni pruebas de la interfaz con esta descarga.
 
 | Modelo | Exactitud val. | Macro-F1 val. | Exactitud test | Macro-F1 test | AUC-ROC test |
 | --- | ---: | ---: | ---: | ---: | ---: |
@@ -153,7 +153,7 @@ Desde la perspectiva ética y de impacto de la rúbrica [2], relacionamos los pr
 
 Ejecutamos los cuadernos 01 y 02 con la descarga real: auditamos las imágenes, preparamos las particiones, comprobamos los vectores de características y generamos recortes Mixed pendientes. El piloto previo con imágenes sintéticas mostró aciertos de Random Forest y SVM y una CNN de una época que predijo Regular en todos los casos. Separamos ambos hallazgos y no presentamos el piloto como desempeño agrícola.
 
-Para completar el experimento quedan los cuadernos 03 y 04, la revisión y anotación de recortes Mixed, la colección de 30–50 fotos propias y el acuerdo de clases del equipo. Después compararemos los tres modelos con validación, una línea base y un conjunto de prueba reservado; analizaremos errores por clase, fruta y fuente. También contrastaremos tamaño con medidas manuales y probaremos la interfaz. Esos resultados permitirán concluir sobre desempeño e impactos con evidencia.
+Para completar el experimento quedan la ejecución de los cuadernos 03 y 04 con datos finales, la revisión y anotación de recortes Mixed, la colección de 30–50 fotos propias y la aprobación de las clases y criterios de etiquetado. Después compararemos los tres modelos con validación, una línea base y un conjunto de prueba reservado; analizaremos errores por clase, fruta y fuente. También contrastaremos tamaño con medidas manuales y probaremos la interfaz. Esos resultados permitirán concluir sobre desempeño e impactos con evidencia.
 
 ## Referencias
 

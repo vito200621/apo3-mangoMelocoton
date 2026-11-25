@@ -5,20 +5,23 @@ apo3-mangoMelocoton/
 │
 ├── data/                                      # Datos del proyecto
 │   ├── raw/                                   # Datos originales sin procesar
-│   │   ├── collected/                         # Imágenes recolectadas por el equipo
-│   │   └── fruit_quality_classification/      # Dataset público de Kaggle
+│   │   ├── own_collection/                    # Fotos propias, por calidad/fruta
+│   │   └── kaggle/                            # Dataset público descargado
+│   ├── annotations/                           # Plantillas locales de etiquetado
+│   │   ├── own_collection_annotations.csv
+│   │   └── mixed_candidates_annotations.csv
 │   │
 │   ├── processed/                             # Datos procesados
-│   │   ├── images/                            # Imágenes preprocesadas
+│   │   ├── images/                            # Procesadas y recortes candidatos
 │   │   ├── features/                          # Características extraídas
-│   │   └── annotations.csv                    # Etiquetas y anotaciones
+│   │   ├── train/, val/, test/                 # Imágenes por partición/clase
+│   │   ├── *train*ml.npy, *val*ml.npy, *test*ml.npy
+│   │   └── split_summary.json                 # Conteos reales y grupos
 │   │
-│   └── splits/                                # Particiones del conjunto de datos
-│       ├── train.csv                          # Datos de entrenamiento
-│       ├── validation.csv                     # Datos de validación
-│       └── test.csv                           # Datos de prueba
+│   └── splits/                                # Marcadores CSV heredados; no son las salidas activas
 │
 ├── docs/                                      # Documentación del proyecto
+│   ├── protocolo_anotacion.md                 # Criterios y flujo de revisión
 │   ├── project/                               # Documentos del proyecto académico
 │   │   ├── 0_Proyecto_Final_26-2.md
 │   │   ├── 0_Proyecto Final 26-2.pdf
@@ -73,7 +76,8 @@ apo3-mangoMelocoton/
 │   │   ├── train_cnn.py
 │   │   ├── train_models.py                    # Coordinador de entrenamiento
 │   │   ├── train_random_forest.py
-│   │   └── train_svm.py
+│   │   ├── train_svm.py
+│   │   └── group_cv.py                        # Validación cruzada sin fuga de grupos
 │   │
 │   └── utils/
 │       ├── __init__.py
@@ -108,6 +112,9 @@ apo3-mangoMelocoton/
 │   ├── __init__.py
 │   ├── test_cnn.py
 │   ├── test_dataset.py
+│   ├── test_feature_extraction.py
+│   ├── test_group_cv.py
+│   ├── test_metrics.py
 │   ├── test_load_data.py
 │   ├── test_predictor.py
 │   ├── test_preprocessing.py

@@ -5,9 +5,11 @@ from pathlib import Path
 import numpy as np
 from sklearn.model_selection import GridSearchCV
 
-from src.data.load_data import load_ml_arrays
+from src.data.feature_extraction import load_split_groups
+from src.data.load_data import load_ml_train_val_arrays
 from src.evaluation.metrics import evaluate_predictions
 from src.models.svm import build_svm_pipeline, get_svm_param_grid
+from src.training.group_cv import build_group_cv_splits
 from src.utils.config import load_label_info
 from src.utils.helpers import save_sklearn_model
 
@@ -24,19 +26,25 @@ def train_svm(
     label_info = load_label_info(processed_dir)
     class_names = label_info["class_names"]
 
-    arrays = load_ml_arrays(processed_dir)
+    arrays = load_ml_train_val_arrays(processed_dir)
     Xtrain, ytrain = arrays["Xtrain"], arrays["ytrain"]
     Xval, yval = arrays["Xval"], arrays["yval"]
+    train_groups = load_split_groups(
+        processed_dir, "train", label_info, expected_labels=ytrain
+    )
+    if len(train_groups) != len(ytrain):
+        raise ValueError("Training group IDs do not align with the feature matrix.")
+    cv_splits = build_group_cv_splits(ytrain, train_groups)
 
     svm_grid = GridSearchCV(
         estimator=build_svm_pipeline(),
         param_grid=get_svm_param_grid(),
-        cv=3,
+        cv=cv_splits,
         scoring="f1_macro",
         verbose=1,
         n_jobs=-1,
     )
-    svm_grid.fit(Xtrain, ytrain)
+    svm_grid.fit(Xtrain, ytrain, groups=train_groups)
 
     best_pipeline = svm_grid.best_estimator_
     y_pred_val = best_pipeline.predict(Xval)

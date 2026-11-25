@@ -4,7 +4,7 @@ from pathlib import Path
 
 import joblib
 
-from src.data.load_data import load_ml_arrays
+from src.data.load_data import load_ml_test_arrays
 from src.evaluation.metrics import full_report
 from src.utils.config import load_label_info
 
@@ -22,7 +22,7 @@ def evaluate_svm(
             raise FileNotFoundError(f"Required SVM artifact not found: {path}")
 
     label_info = load_label_info(processed_dir)
-    arrays = load_ml_arrays(processed_dir)
+    arrays = load_ml_test_arrays(processed_dir)
     model = joblib.load(model_path)
     scaler = joblib.load(scaler_path)
     features = scaler.transform(arrays["Xtest"])
